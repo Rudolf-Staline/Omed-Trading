@@ -1,7 +1,23 @@
 import { useEffect, useRef, useCallback } from 'react'
 import { useMarketStore, useAlertStore } from '../store/useMarketStore'
 
-const WS_URL = 'ws://localhost:8000/ws'
+/**
+ * Build the WebSocket URL dynamically:
+ *  - Dev  → VITE_WS_URL env var (ws://localhost:8000/ws)
+ *  - Prod → same origin, /ws path (wss://your-app.vercel.app/ws)
+ * Returns null if WS is explicitly disabled.
+ */
+function getWsUrl(): string | null {
+  // Explicitly disabled (e.g. on Vercel where serverless has no WS)
+  if (import.meta.env.VITE_WS_DISABLED === 'true') return null
+  // Dev override
+  if (import.meta.env.VITE_WS_URL) return import.meta.env.VITE_WS_URL
+  // Auto-derive from current origin (works on any domain)
+  const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  return `${proto}//${window.location.host}/ws`
+}
+
+const WS_URL = getWsUrl()
 
 export function useWebSocket() {
   const ws = useRef<WebSocket | null>(null)
@@ -10,6 +26,10 @@ export function useWebSocket() {
   const { addAlert } = useAlertStore()
 
   const connect = useCallback(() => {
+    if (!WS_URL) {
+      console.log('[WS] WebSocket disabled in this environment.')
+      return
+    }
     if (ws.current?.readyState === WebSocket.OPEN) return
 
     ws.current = new WebSocket(WS_URL)
