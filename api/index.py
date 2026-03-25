@@ -133,3 +133,17 @@ async def create_alert(symbol: str, alert_type: str = "price", message: str = ""
 @app.get("/api/signals")
 async def get_signals(limit: int = 50):
     return {"signals": database.get_recent_signals(limit)}
+
+@app.get("/health")
+async def health_no_api():
+    return {"status": "ok", "runtime": "vercel-serverless-stripped", "timestamp": str(datetime.now())}
+
+from fastapi import Request
+@app.api_route("/{path_name:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
+async def catch_all(request: Request, path_name: str):
+    return {
+        "detail": "Catch-all triggered. Route not found.",
+        "path_name": path_name,
+        "url_path": request.url.path,
+        "base_url": str(request.base_url)
+    }
