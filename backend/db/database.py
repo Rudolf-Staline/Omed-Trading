@@ -1,9 +1,14 @@
 import sqlite3
 import json
 from datetime import datetime
+import os
 from pathlib import Path
 
-DB_PATH = Path(__file__).parent.parent / "nexus.db"
+# If running on Vercel/Lambda, the only writable directory is /tmp
+if os.environ.get("VERCEL") or os.environ.get("AWS_EXECUTION_ENV"):
+    DB_PATH = Path("/tmp") / "nexus.db"
+else:
+    DB_PATH = Path(__file__).parent.parent / "nexus.db"
 
 
 def get_connection():
