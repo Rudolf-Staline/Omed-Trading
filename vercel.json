@@ -1,17 +1,10 @@
 {
-  "version": 2,
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
   "installCommand": "pip install -r requirements.txt",
-  "framework": null,
-  "functions": {
-    "api/index.py": {
-      "maxDuration": 60
-    }
-  },
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/api/(.*)",
       "destination": "/api/index.py"
     },
     {
