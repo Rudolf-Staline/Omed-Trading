@@ -24,6 +24,14 @@ export interface Opportunity {
     pips_risk: number
     atr: number
     management_plan: string[]
+    deriv?: {
+      stake: number
+      multiplier: number
+      sl_amount: number
+      tp1_amount: number
+      tp2_amount: number
+      tp3_amount: number
+    }
   }
   indicators: {
     rsi?: number

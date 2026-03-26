@@ -101,6 +101,52 @@ export function SignalCard({ opportunity: opp, rank }: Props) {
             </span>
           </div>
         </div>
+        
+        {/* Deriv Compatibility */}
+        {opp.trade_setup.deriv && (
+          <div style={{ marginBottom: 16 }}>
+            <div className="section-title" style={{ padding: '0 0 8px', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, borderBottom: '1px solid var(--color-border)' }}>
+              <span style={{ fontSize: 14 }}>🎯</span> Config Deriv Multipliers
+            </div>
+            <div style={{
+              background: 'rgba(239, 83, 80, 0.05)',
+              border: '1px solid rgba(239, 83, 80, 0.15)',
+              borderRadius: 6,
+              padding: '12px',
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '12px 16px'
+            }}>
+              <div>
+                <div style={{ fontSize: 10, color: '#787B86', marginBottom: 2 }}>Mise (Stake)</div>
+                <div className="font-mono" style={{ fontSize: 14, fontWeight: 700, color: '#D1D4DC' }}>
+                  {opp.trade_setup.deriv.stake}$
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10, color: '#787B86', marginBottom: 2 }}>Multiplicateur</div>
+                <div className="font-mono" style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-warn)' }}>
+                  x{opp.trade_setup.deriv.multiplier}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10, color: '#787B86', marginBottom: 2 }}>Stop Loss ($)</div>
+                <div className="font-mono" style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-bear)' }}>
+                  -{opp.trade_setup.deriv.sl_amount.toFixed(2)}$
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10, color: '#787B86', marginBottom: 2 }}>Objectif TP1 ($)</div>
+                <div className="font-mono" style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-bull)' }}>
+                  +{opp.trade_setup.deriv.tp1_amount.toFixed(2)}$
+                </div>
+              </div>
+            </div>
+            <div style={{ fontSize: 9, color: '#787B86', marginTop: 6, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.4 }}>
+              Basé sur une mise de {opp.trade_setup.deriv.stake}$ avec multiplicateur de sécurité.
+            </div>
+          </div>
+        )}
 
         {/* Indicators */}
         <div style={{ marginBottom: 16 }}>
