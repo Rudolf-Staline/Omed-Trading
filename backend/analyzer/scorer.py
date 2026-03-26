@@ -1,3 +1,4 @@
+import numpy as np
 from typing import Optional
 
 
@@ -48,23 +49,34 @@ class OpportunityScorer:
             bull = 0
             bear = 0
 
-            def _safe(v):
-                return v if v is not None else 0
+            def _is_present(v):
+                return v is not None and (not isinstance(v, float) or not np.isnan(v))
 
-            if _safe(ind.get('EMA_9'))  > _safe(ind.get('EMA_21')):  bull += 1
-            else: bear += 1
+            ema9  = ind.get('EMA_9')
+            ema21 = ind.get('EMA_21')
+            if _is_present(ema9) and _is_present(ema21):
+                if ema9 > ema21: bull += 1
+                else: bear += 1
 
-            if _safe(ind.get('EMA_21')) > _safe(ind.get('EMA_50')):  bull += 1
-            else: bear += 1
+            ema50 = ind.get('EMA_50')
+            if _is_present(ema21) and _is_present(ema50):
+                if ema21 > ema50: bull += 1
+                else: bear += 1
 
-            if close > _safe(ind.get('EMA_200')):   bull += 1
-            else: bear += 1
+            ema200 = ind.get('EMA_200')
+            if _is_present(close) and _is_present(ema200):
+                if close > ema200: bull += 1
+                else: bear += 1
 
-            if _safe(ind.get('supertrend_dir')) >= 1: bull += 1
-            else: bear += 1
+            st_dir = ind.get('supertrend_dir')
+            if _is_present(st_dir):
+                if st_dir >= 1: bull += 1
+                else: bear += 1
 
-            if close > _safe(ind.get('ichi_kijun', 0) or 0): bull += 1
-            else: bear += 1
+            kijun = ind.get('ichi_kijun')
+            if _is_present(close) and _is_present(kijun):
+                if close > kijun: bull += 1
+                else: bear += 1
 
             tf_signals[tf] = 'bullish' if bull > bear else 'bearish'
 
